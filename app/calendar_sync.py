@@ -2,27 +2,21 @@ from googleapiclient.discovery import build
 from google.oauth2.service_account import Credentials
 from datetime import datetime, timedelta
 import os
+import json
 
 # Define scopes
 SCOPES = ["https://www.googleapis.com/auth/calendar"]
 
 # Try to find credentials in current dir or parent dir
-CREDENTIALS_FILE = "D://UserData//Desktop//Hospital_Bot//credintials.json"
-if not os.path.exists(CREDENTIALS_FILE):
-    # Try parent directory
-    parent_creds = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "credentials.json")
-    if os.path.exists(parent_creds):
-        CREDENTIALS_FILE = parent_creds
-
 def get_calendar_service():
-    if not os.path.exists(CREDENTIALS_FILE):
-        print(f"Warning: {CREDENTIALS_FILE} not found. Calendar sync will be skipped.")
+    creds_json = os.getenv("GOOGLE_CREDENTIALS_JSON")
+    if not creds_json:
+        print("Warning: GOOGLE_CREDENTIALS_JSON env var not found. Calendar sync will be skipped.")
         return None
-    
+
     try:
-        creds = Credentials.from_service_account_file(
-            CREDENTIALS_FILE, scopes=SCOPES
-        )
+        creds_info = json.loads(creds_json)
+        creds = Credentials.from_service_account_info(creds_info, scopes=SCOPES)
         return build("calendar", "v3", credentials=creds)
     except Exception as e:
         print(f"Error loading credentials: {e}")
