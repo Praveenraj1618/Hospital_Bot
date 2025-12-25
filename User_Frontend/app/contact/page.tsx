@@ -1,3 +1,4 @@
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Phone, MapPin, Mail, Clock, MessageSquare } from "lucide-react"
@@ -143,9 +144,12 @@ export default function ContactPage() {
                 size="lg"
                 variant="secondary"
                 className="h-14 px-8 text-lg font-semibold shadow-xl hover:shadow-2xl hover:scale-105 transition-all"
+                asChild
               >
-                <MessageSquare className="w-5 h-5 mr-2" />
-                Chat with Hospital Assistant
+                <Link href="https://t.me/TheMedixBot" target="_blank">
+                  <MessageSquare className="w-5 h-5 mr-2" />
+                  Chat with Hospital Assistant
+                </Link>
               </Button>
             </div>
           </Card>

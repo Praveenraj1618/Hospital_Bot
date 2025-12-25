@@ -91,6 +91,7 @@ export default function BookAppointmentPage() {
     phone: "",
     email: "",
   })
+  const [bookingToken, setBookingToken] = useState<string | null>(null)
 
   const handleNextStep = () => {
     if (currentStep < 4) setCurrentStep(currentStep + 1)
@@ -100,8 +101,33 @@ export default function BookAppointmentPage() {
     if (currentStep > 1) setCurrentStep(currentStep - 1)
   }
 
-  const handleSubmit = () => {
-    setIsSubmitted(true)
+  const handleSubmit = async () => {
+    try {
+      const response = await fetch("http://127.0.0.1:8000/api/appointments", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          patient_name: patientInfo.fullName,
+          phone: patientInfo.phone,
+          service: services.find((s) => s.id === selectedService)?.name || selectedService,
+          doctor: "Any Available Doctor", // Placeholder as doctor selection isn't in UI yet
+          appointment_datetime: selectedDate ? new Date(selectedDate.setHours(parseInt(selectedTime), 0, 0, 0)).toISOString() : new Date().toISOString(),
+        }),
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setBookingToken(data.token) // e.g. HSP-12345
+        setIsSubmitted(true)
+      } else {
+        console.error("Booking failed")
+        // Handle error (optional: show toast)
+      }
+    } catch (error) {
+      console.error("Error submitting booking:", error)
+    }
   }
 
   const canProceedToNextStep = () => {
@@ -194,9 +220,9 @@ export default function BookAppointmentPage() {
           </p>
           <div className="space-y-3">
             <Button className="w-full" size="lg" asChild>
-              <Link href="/contact">
+              <Link href={`https://t.me/TheMedixBot?start=token_${bookingToken || ""}`} target="_blank">
                 <MessageSquare className="w-5 h-5 mr-2" />
-                Continue on Chatbot
+                Continue on Chatbot (Token: {bookingToken})
               </Link>
             </Button>
             <Button variant="outline" className="w-full bg-transparent" asChild>
