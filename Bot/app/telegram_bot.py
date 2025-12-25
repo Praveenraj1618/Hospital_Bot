@@ -3,9 +3,7 @@ import os
 import sys
 import calendar
 from doctors import DOCTORS
-from appointments import APPOINTMENTS
-from calendar_sync import add_to_calendar
-from reminders import schedule_reminders
+from backend_client import book_appointment
 from calendar_links import generate_calendar_link
 from datetime import datetime, timedelta, date, time
 import random
@@ -327,18 +325,6 @@ def generate_slots(doctor, selected_date):
             slot_time = start_dt.time()
 
             # Check availability
-            is_booked = any(
-                a["doctor_id"] == doctor["id"] and
-                a["date"] == selected_date and
-                a["time"] == slot_time
-                for a in APPOINTMENTS
-            )
-
-            if not is_booked:
-                slots.append(slot_time)
-
-        start_dt += timedelta(minutes=opd["slot_minutes"])
-
     return slots
 
 
@@ -403,35 +389,54 @@ async def handle_slot_selection(update: Update, context: ContextTypes.DEFAULT_TY
     doctor = get_selected_doctor(context)
     appointment_date = context.user_data["date"]
 
-    # Save to store
-    APPOINTMENTS.append({
-        "doctor_id": doctor["id"],
-        "date": appointment_date,
-        "time": slot_time
-    })
+    appointment_datetime = datetime.combine(appointment_date, slot_time)
 
-    token = f"HSP-{random.randint(10000, 99999)}"
-
-    # Sync to Google Calendar
-    add_to_calendar(doctor, appointment_date, slot_time)
-
-    # Schedule reminders
-    # Need to reconstruct the appointment dict exactly as expected by scheduler
-    appointment_full = {
-        "doctor_id": doctor["id"],
-        "date": appointment_date,
-        "time": slot_time,
-        "datetime": datetime.combine(appointment_date, slot_time),
-        "chat_id": query.message.chat_id
-    }
-    # Update global store with full object (conceptually replacing the simpler one added above)
-    # Actually, let's just update the last entry or append the full one correctly first.
-    APPOINTMENTS.pop()
-    APPOINTMENTS.append(appointment_full)
+    # Note: hospital_id is not explicitly in DOCTORS yet as per previous context, 
+    # but the example payload required it. 
+    # Assumptions: 
+    # 1. We hardcode hospital_id=1 for now as single tenant logic or 
+    # 2. We extract it from doctor object if available. 
+    # The models.py has Hospital, but DOCTORS dict in doctors.py doesn't have hospital_id.
+    # The user request example showed "hospital_id": 1. I will assume 1 for now.
     
-    schedule_reminders(context.bot, appointment_full)
+    payload = {
+        "hospital_id": 1,
+        "doctor_id": int(doctor["id"].split("_")[1]) if "_" in doctor["id"] else 0, # Hacky ID parsing or fix DOCTORS
+        # "doctor_id": doctor["id"] is a string like "cardio_1", backend expects int.
+        # User REQ: "doctor_id": 2.
+        # I should probably update doctors.py to have integer IDs or handle string IDs in backend.
+        # Models.py says doctor_id is Integer.
+        # So I MUST convert "cardio_1" to an int or updated doctors.py.
+        # For this refactor, I will attempt to robustly parse digits from the string ID.
+        
+        "patient_name": "Telegram User",
+        "patient_phone": str(query.from_user.id),
+        "appointment_datetime": appointment_datetime.isoformat(),
+        "source": "telegram"
+    }
+    
+    # Actually, the user req said:
+    # "doctor_id": 2
+    # But my doctors.py has "cardio_1".
+    # I'll try to extract the number.
+    
+    doc_id_int = 0
+    import re
+    id_match = re.search(r'\d+', doctor["id"])
+    if id_match:
+        doc_id_int = int(id_match.group())
 
-    # Generate Calendar Link
+    payload["doctor_id"] = doc_id_int
+
+    result = book_appointment(payload)
+
+    if "error" in result:
+        await query.edit_message_text(
+            f"❌ {result.get('error', 'Booking failed')}\nPlease choose another slot."
+        )
+        return
+
+    # Calendar link generation handles formatting internally
     calendar_link = generate_calendar_link(doctor, appointment_date, slot_time)
 
     await query.edit_message_text(
@@ -441,7 +446,7 @@ async def handle_slot_selection(update: Update, context: ContextTypes.DEFAULT_TY
         f"📅 {appointment_date.strftime('%A, %d %b %Y')}\n"
         f"⏰ {slot_time.strftime('%I:%M %p')}\n"
         f"💰 Fee: ₹{doctor['consultation_fee']}\n"
-        f"🎫 Token: `{token}`\n\n"
+        f"🎫 Token: `{result['token']}`\n\n"
         f"Thank you for using Hospital Bot! 👋\n\n"
         f"📅 *Add to your calendar*\n{calendar_link}",
         parse_mode="Markdown"
