@@ -19,3 +19,22 @@ def create_appointment(db: Session, data):
     db.refresh(appt)
 
     return appt
+
+def get_appointment_by_token(db: Session, token: str):
+    return db.query(Appointment).filter(Appointment.token == token).first()
+
+def reschedule_appointment(db: Session, token: str, new_datetime):
+    appt = get_appointment_by_token(db, token)
+    if appt:
+        appt.appointment_datetime = new_datetime
+        db.commit()
+        db.refresh(appt)
+    return appt
+
+def delete_appointment(db: Session, token: str):
+    appt = get_appointment_by_token(db, token)
+    if appt:
+        db.delete(appt)
+        db.commit()
+        return True
+    return False

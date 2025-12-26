@@ -1,5 +1,16 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
 venv/
 .env
-credentials.json
-__pycache__/
 
+# Node
+node_modules/
+.next/
+dist/
+
+# Project Specific
+backend/static/pdfs/
+*.pdf
+.DS_Store

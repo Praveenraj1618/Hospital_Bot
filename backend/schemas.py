@@ -11,11 +11,3 @@ class AppointmentCreate(BaseModel):
 class AppointmentResponse(BaseModel):
     token: str
     status: str
-
-class AppointmentDetail(BaseModel):
-    patient_name: str
-    service: str
-    doctor: str
-    appointment_datetime: datetime
-    token: str
-    status: str
