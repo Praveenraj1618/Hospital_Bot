@@ -145,27 +145,27 @@ export function PatientDetailsDialog({ patient, appointments, open, onOpenChange
               : []
             
             return medicalHistory.length > 0 && (
-              <Card className="border-2 border-purple-100 bg-gradient-to-br from-purple-50/50 to-pink-50/50">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-lg">
-                    <FileText className="w-5 h-5 text-purple-600" />
-                    Medical History
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex flex-wrap gap-2">
+            <Card className="border-2 border-purple-100 bg-gradient-to-br from-purple-50/50 to-pink-50/50">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-lg">
+                  <FileText className="w-5 h-5 text-purple-600" />
+                  Medical History
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-wrap gap-2">
                     {medicalHistory.map((condition: string, index: number) => (
-                      <Badge
-                        key={index}
-                        variant="outline"
-                        className="bg-white border-purple-200 text-purple-700 px-3 py-1"
-                      >
-                        {condition}
-                      </Badge>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
+                    <Badge
+                      key={index}
+                      variant="outline"
+                      className="bg-white border-purple-200 text-purple-700 px-3 py-1"
+                    >
+                      {condition}
+                    </Badge>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
             )
           })()}
 

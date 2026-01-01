@@ -1,53 +1,47 @@
-# Hospital Appointment Management System
+# Hospital Management System
 
-A comprehensive full-stack hospital management system built with Next.js (React) and FastAPI (Python). This system allows hospitals to manage appointments, doctors, patients, specializations, and banners through an intuitive admin dashboard.
+A comprehensive hospital management system with admin dashboard and patient appointment booking system.
 
-## 🚀 Features
-
-### User Frontend
-- **Homepage** with hero section and service overview
-- **Doctor Listing** with filtering by specialization
-- **Appointment Booking** with date/time selection
-- **Service Information** pages
-- **About & Contact** pages
-- **Responsive Design** for all devices
+## 🏥 Features
 
 ### Admin Dashboard
-- **Dashboard Overview** with statistics and quick actions
-- **Doctor Management** - Add, edit, delete, and toggle active status
-- **Patient Management** - View patient details and appointment history
-- **Specialization Management** - Manage medical specializations
-- **Appointment Management** - View and manage all appointments
-- **Banner Management** - Manage homepage banners
-- **Authentication** - Secure admin login/registration
+- **Doctor Management**: Add, edit, delete, and toggle doctor status
+- **Patient Management**: View patient details, appointment history, and medical records
+- **Specialization Management**: Manage medical specializations with active/inactive status
+- **Appointment Management**: View and manage all appointments
+- **Banner Management**: Manage homepage banners
+- **Dashboard Statistics**: Real-time statistics and quick actions
+
+### Patient Portal
+- **Appointment Booking**: Easy appointment booking with doctor selection
+- **Service Selection**: Browse available specializations
+- **Doctor Profiles**: View doctor information and availability
+- **Responsive Design**: Mobile-friendly interface
 
 ## 🛠️ Tech Stack
 
-### Frontend
-- **Framework**: Next.js 16 (React 19)
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS
-- **UI Components**: Radix UI, shadcn/ui
-- **Icons**: Lucide React
-- **Forms**: React Hook Form with Zod validation
-- **Charts**: Recharts
-
 ### Backend
-- **Framework**: FastAPI (Python)
-- **Database**: PostgreSQL
-- **ORM**: SQLAlchemy
-- **Authentication**: JWT (JSON Web Tokens)
-- **Password Hashing**: bcrypt
-- **API Documentation**: Automatic Swagger/OpenAPI
+- **FastAPI**: Modern Python web framework
+- **PostgreSQL**: Relational database
+- **SQLAlchemy**: ORM for database operations
+- **JWT**: Authentication and authorization
+- **bcrypt**: Password hashing
+
+### Frontend
+- **Next.js 14**: React framework with App Router
+- **TypeScript**: Type-safe JavaScript
+- **Tailwind CSS**: Utility-first CSS framework
+- **shadcn/ui**: Beautiful UI components
+- **Lucide Icons**: Modern icon library
 
 ## 📋 Prerequisites
 
-- **Node.js** 18+ and npm/yarn
-- **Python** 3.9+
-- **PostgreSQL** 12+
-- **Git**
+- Python 3.8+
+- Node.js 18+
+- PostgreSQL 12+
+- npm or yarn or pnpm
 
-## 🔧 Installation
+## 🚀 Installation
 
 ### 1. Clone the Repository
 
@@ -61,42 +55,33 @@ cd Hospital-Appointment-System
 ```bash
 cd backend
 
-# Create virtual environment (recommended)
+# Create virtual environment
 python -m venv venv
 
 # Activate virtual environment
-# On Windows:
+# Windows
 venv\Scripts\activate
-# On Linux/Mac:
+# Linux/Mac
 source venv/bin/activate
 
 # Install dependencies
 pip install -r requirements.txt
 
 # Create .env file
-cp .env.example .env  # Or create manually
-```
+cp .env.example .env
+# Edit .env with your database credentials
 
-Edit `.env` file with your database credentials:
-```env
-SECRET_KEY=your-secret-key-here
-DATABASE_URL=postgresql://username:password@localhost:5432/hospital_db
-ACCESS_TOKEN_EXPIRE_MINUTES=43200
-```
-
-### 3. Database Setup
-
-```bash
-# Run database setup script
+# Setup database
 python setup_db.py
+
+# Run migrations (if needed)
+python migrate_doctors_schema.py
+
+# Start backend server
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-This will:
-- Create the database if it doesn't exist
-- Create all necessary tables
-- Create a default admin user (email: `admin@hospital.com`, password: `admin123`)
-
-### 4. Frontend Setup
+### 3. Frontend Setup
 
 ```bash
 cd frontend
@@ -109,45 +94,9 @@ yarn install
 pnpm install
 
 # Create .env.local file
-```
-
-Create `frontend/.env.local`:
-```env
 NEXT_PUBLIC_API_URL=http://localhost:8000
-```
 
-## 🚀 Running the Application
-
-### Start Backend Server
-
-```bash
-cd backend
-
-# Activate virtual environment (if not already active)
-# Windows:
-venv\Scripts\activate
-# Linux/Mac:
-source venv/bin/activate
-
-# Start server
-uvicorn main:app --reload --host 0.0.0.0 --port 8000
-
-# Or use the provided scripts:
-# Windows:
-start.bat
-# Linux/Mac:
-./start.sh
-```
-
-Backend will be available at: `http://localhost:8000`
-API Documentation: `http://localhost:8000/docs`
-
-### Start Frontend Server
-
-```bash
-cd frontend
-
-# Development mode
+# Start development server
 npm run dev
 # or
 yarn dev
@@ -155,40 +104,49 @@ yarn dev
 pnpm dev
 ```
 
-Frontend will be available at: `http://localhost:3000`
+## ⚙️ Configuration
+
+### Backend Environment Variables (.env)
+
+```env
+# Database
+DATABASE_URL=postgresql://postgres:password@localhost:5432/hospital_db
+
+# JWT
+SECRET_KEY=your-secret-key-here
+ACCESS_TOKEN_EXPIRE_MINUTES=43200
+```
+
+### Frontend Environment Variables (.env.local)
+
+```env
+NEXT_PUBLIC_API_URL=http://localhost:8000
+```
 
 ## 📁 Project Structure
 
 ```
-Hospital-Appointment-System/
+Hospital_Sys/
 ├── backend/
 │   ├── app/
-│   │   ├── routers/          # API route handlers
-│   │   │   ├── admin.py       # Admin authentication
-│   │   │   ├── doctors.py     # Doctor management
-│   │   │   ├── patients.py    # Patient management
-│   │   │   ├── appointments.py # Appointment management
-│   │   │   ├── specializations.py # Specialization management
-│   │   │   └── banners.py     # Banner management
-│   │   ├── models.py          # Database models
-│   │   ├── schemas.py         # Pydantic schemas
-│   │   ├── database.py        # Database configuration
-│   │   └── auth.py            # Authentication utilities
-│   ├── main.py                # FastAPI application entry
-│   ├── requirements.txt       # Python dependencies
-│   ├── setup_db.py            # Database setup script
-│   └── .env                   # Environment variables
+│   │   ├── routers/        # API routes
+│   │   ├── models.py        # Database models
+│   │   ├── schemas.py       # Pydantic schemas
+│   │   ├── database.py      # Database configuration
+│   │   └── auth.py          # Authentication logic
+│   ├── main.py              # FastAPI application
+│   ├── setup_db.py          # Database setup script
+│   ├── migrate_doctors_schema.py  # Migration script
+│   └── requirements.txt     # Python dependencies
 │
 ├── frontend/
-│   ├── app/                   # Next.js app directory
-│   │   ├── admin/             # Admin dashboard pages
-│   │   ├── book/              # Appointment booking
-│   │   └── page.tsx           # Homepage
-│   ├── components/            # React components
-│   │   ├── admin/             # Admin-specific components
-│   │   └── ui/                # Reusable UI components
-│   ├── lib/                   # Utility functions
-│   └── package.json           # Node dependencies
+│   ├── app/                 # Next.js app directory
+│   │   ├── admin/           # Admin dashboard pages
+│   │   ├── book/            # Appointment booking
+│   │   └── page.tsx         # Homepage
+│   ├── components/         # React components
+│   ├── lib/                 # Utility functions
+│   └── public/             # Static assets
 │
 └── README.md
 ```
@@ -196,137 +154,130 @@ Hospital-Appointment-System/
 ## 🔐 Default Admin Credentials
 
 After running `setup_db.py`, you can login with:
+
 - **Email**: `admin@hospital.com`
 - **Password**: `admin123`
 
-**⚠️ Important**: Change the default password after first login!
+**⚠️ Change these credentials in production!**
 
 ## 📝 API Endpoints
 
 ### Admin
 - `POST /api/admin/register` - Register new admin
 - `POST /api/admin/login` - Admin login
-- `GET /api/admin/stats` - Get dashboard statistics
+- `GET /api/admin/stats` - Dashboard statistics
 
 ### Doctors
 - `GET /api/doctors` - Get all doctors
-- `GET /api/doctors/{id}` - Get doctor by ID
-- `POST /api/doctors` - Create new doctor
+- `POST /api/doctors` - Create doctor (requires: name, qualification, specialization)
 - `PUT /api/doctors/{id}` - Update doctor
-- `PATCH /api/doctors/{id}/toggle-active` - Toggle doctor active status
 - `DELETE /api/doctors/{id}` - Delete doctor
-
-### Patients
-- `GET /api/patients` - Get all patients
-- `GET /api/patients/{id}` - Get patient by ID
-
-### Appointments
-- `GET /api/appointments` - Get all appointments
-- `POST /api/appointments` - Create new appointment
-- `PATCH /api/appointments/{id}/status` - Update appointment status
+- `PATCH /api/doctors/{id}/toggle-active` - Toggle doctor status
 
 ### Specializations
 - `GET /api/specializations` - Get all specializations
 - `GET /api/specializations/active` - Get active specializations
 - `POST /api/specializations` - Create specialization
 - `PUT /api/specializations/{id}` - Update specialization
-- `PATCH /api/specializations/{id}/toggle-active` - Toggle active status
 - `DELETE /api/specializations/{id}` - Delete specialization
+- `PATCH /api/specializations/{id}/toggle-active` - Toggle status
+
+### Patients
+- `GET /api/patients` - Get all patients
+- `GET /api/patients/{id}` - Get patient details
+
+### Appointments
+- `GET /api/appointments` - Get all appointments
+- `POST /api/appointments` - Create appointment
+- `PATCH /api/appointments/{id}/status` - Update appointment status
 
 ### Banners
 - `GET /api/banners` - Get all banners
 - `POST /api/banners` - Create banner
 - `PUT /api/banners/{id}` - Update banner
-- `PATCH /api/banners/{id}/toggle-active` - Toggle active status
 - `DELETE /api/banners/{id}` - Delete banner
+- `PATCH /api/banners/{id}/toggle-active` - Toggle banner status
 
-Full API documentation available at `/docs` when backend is running.
+## 🧪 Testing
+
+### Verify System
+
+```bash
+cd backend
+python verify_system.py
+```
+
+This will check:
+- Database connection
+- Table existence
+- Schema validation
+- API endpoints
+- Sample data
 
 ## 🗄️ Database Schema
 
 ### Key Tables
-- **admins** - Admin users
-- **doctors** - Doctor information
-- **patients** - Patient records
-- **appointments** - Appointment bookings
-- **specializations** - Medical specializations
-- **banners** - Homepage banners
+- **doctors**: Doctor information (name, qualification, specialization required)
+- **specializations**: Medical specializations
+- **patients**: Patient records
+- **appointments**: Appointment bookings
+- **admins**: Admin users
+- **banners**: Homepage banners
 
-## 🔒 Security Features
+### Doctor Requirements
+- **Required Fields**: Name, Qualification, Specialization
+- **Optional Fields**: Email, Phone, Experience, Consultation Fee, OPD Timings, Languages, Bio, Profile Picture
 
-- JWT-based authentication
-- Password hashing with bcrypt
-- CORS configuration
-- Environment variable management
-- Input validation with Pydantic
+## 🚀 Deployment
 
-## 🧪 Development
-
-### Running Migrations
-
-If you need to update the database schema:
+### Backend (Production)
 
 ```bash
-cd backend
-python migrate_doctors_schema.py  # Example migration
+# Use production ASGI server
+pip install gunicorn uvicorn[standard]
+
+# Run with gunicorn
+gunicorn main:app -w 4 -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000
 ```
 
-### Adding Sample Data
+### Frontend (Production)
 
 ```bash
-cd backend
-python populate_sample_data.py
+# Build for production
+npm run build
+
+# Start production server
+npm start
 ```
-
-## 📦 Deployment
-
-### Backend Deployment
-
-1. Set environment variables on your hosting platform
-2. Ensure PostgreSQL database is accessible
-3. Run migrations if needed
-4. Deploy using platforms like:
-   - Heroku
-   - Railway
-   - Render
-   - AWS/GCP/Azure
-
-### Frontend Deployment
-
-1. Set `NEXT_PUBLIC_API_URL` environment variable
-2. Build the application: `npm run build`
-3. Deploy to:
-   - Vercel (recommended for Next.js)
-   - Netlify
-   - AWS Amplify
-   - Any static hosting service
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 📄 License
 
-This project is open source and available under the MIT License.
+This project is private and proprietary.
 
-## 👨‍💻 Author
+## 👤 Author
 
 **Praveenraj1618**
 
 - GitHub: [@Praveenraj1618](https://github.com/Praveenraj1618)
-- Repository: [Hospital-Appointment-System](https://github.com/Praveenraj1618/Hospital-Appointment-System)
 
-## 🙏 Acknowledgments
+## 🤝 Contributing
 
-- FastAPI for the excellent Python framework
-- Next.js team for the amazing React framework
-- All open-source contributors whose packages made this possible
+This is a private project. Contributions are not accepted at this time.
 
 ## 📞 Support
 
-For support, please open an issue in the GitHub repository.
+For support, please contact the repository owner.
+
+## 🔄 Recent Updates
+
+### v1.0.0
+- ✅ Doctor form: Only Name, Qualification, and Specialization are required
+- ✅ Patient appointment counts fixed
+- ✅ Database schema migration completed
+- ✅ Comprehensive system verification
+- ✅ All API endpoints connected and working
 
 ---
 
-**Note**: This is a development project. For production use, ensure proper security measures, error handling, and testing are in place.
+**Made with ❤️ for Hospital Management**
 

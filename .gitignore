@@ -1,24 +1,7 @@
-# Operating System Files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-desktop.ini
-
-# IDE and Editor Files
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-.project
-.classpath
-.settings/
-*.sublime-project
-*.sublime-workspace
+# Environment variables
+.env
+.env.local
+.env.*.local
 
 # Python
 __pycache__/
@@ -43,53 +26,36 @@ wheels/
 *.egg
 MANIFEST
 venv/
-env/
 ENV/
+env/
 .venv
-pip-log.txt
-pip-delete-this-directory.txt
-.pytest_cache/
-.coverage
-htmlcov/
-.tox/
-.hypothesis/
-
-# Node.js / Frontend
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
-.pnpm-debug.log*
-
-# Next.js
-.next/
-out/
-build/
-dist/
-.vercel
-.vercel.json
-
-# Environment Variables
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-.env*.local
-*.env
 
 # Database
 *.db
 *.sqlite
 *.sqlite3
-*.db-journal
 hospital.db
 hospital_v2.db
 
-# Logs
-logs/
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Node.js / Frontend
+node_modules/
+.next/
+out/
+dist/
+build/
+.nuxt/
+.cache/
+.parcel-cache/
+.next
+.turbo
 *.log
 npm-debug.log*
 yarn-debug.log*
@@ -98,58 +64,60 @@ pnpm-debug.log*
 lerna-debug.log*
 
 # Testing
-coverage/
-.nyc_output/
-*.lcov
-.jest/
+.coverage
+.pytest_cache/
+htmlcov/
+.tox/
+.hypothesis/
 
-# TypeScript
-*.tsbuildinfo
-next-env.d.ts
+# Jupyter Notebook
+.ipynb_checkpoints
 
-# Temporary Files
+# pyenv
+.python-version
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Temporary files
 *.tmp
 *.temp
-.cache/
-.temp/
-tmp/
-temp/
-
-# Build outputs
-*.pyc
-*.pyo
-*.pyd
-*.class
-*.jar
-*.war
-*.ear
-
-# OS generated files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-
-# Backup files
 *.bak
-*.backup
-*~
+*.swp
 
-# Debug files
-debug_auth.py
-test_*.py
-manual_db_fix.py
+# Logs
+logs/
+*.log
 
-# Documentation (optional - uncomment if you don't want to track docs)
-# *.md
-# docs/
+# Migration files (keep structure, ignore generated)
+alembic/versions/*.pyc
 
-# Misc
-.idea/
-*.iml
-*.ipr
-*.iws
-
+# Local configuration
+config.local.py
+settings.local.py

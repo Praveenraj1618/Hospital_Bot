@@ -66,9 +66,9 @@ export default function SpecializationsPage() {
       console.log("Token present:", !!token)
       
       const response = await fetch(apiUrl, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
       })
       
       console.log("Specializations API response status:", response.status, response.statusText)
@@ -169,11 +169,11 @@ export default function SpecializationsPage() {
       console.log("Token present:", !!token, "Token length:", token?.length)
       
       const response = await fetch(apiUrl, {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
       })
       
       console.log("Toggle response status:", response.status, response.statusText)
@@ -183,7 +183,7 @@ export default function SpecializationsPage() {
           const errorText = await response.text().catch(() => "Unauthorized")
           console.warn("401 Unauthorized - Token may be invalid, but staying on page. Response:", errorText)
           // Don't clear token or redirect - user stays on page
-          toast({
+        toast({
             title: "Authentication Error",
             description: "Unable to update. Please check your connection or try logging out and back in.",
             variant: "destructive",
@@ -197,9 +197,9 @@ export default function SpecializationsPage() {
 
       const result = await response.json()
       toast({
-        title: "Success",
+          title: "Success",
         description: result.message || `Specialization ${!currentStatus ? "activated" : "deactivated"} successfully`,
-      })
+        })
       // Refresh the list to show updated status
       await fetchSpecializations()
     } catch (error: any) {
@@ -249,7 +249,7 @@ export default function SpecializationsPage() {
 
       if (!response.ok) {
         if (response.status === 401) {
-          toast({
+        toast({
             title: "Authentication Error",
             description: "Unable to delete. Please check your connection or try logging out and back in.",
             variant: "destructive",
@@ -263,9 +263,9 @@ export default function SpecializationsPage() {
 
       const result = await response.json()
       toast({
-        title: "Success",
+          title: "Success",
         description: result.message || "Specialization deleted successfully",
-      })
+        })
       await fetchSpecializations()
     } catch (error: any) {
       console.error("Failed to delete specialization:", error)
